@@ -19,16 +19,24 @@
   var extension = function(flowplayer) {
     flowplayer(function(player) {
       var lastProgress, timeout;
+
+      function _cbHandler(err) {
+        if (err) {
+          clearTimeout(timeout);
+          timeout = 'error';
+        }
+      }
+
+      player.on('ready', function(_ev, _api, video) {
+        player.one('resume', function() {
+          track(video.src, 0, flowplayer.version, false, _cbHandler);
+        });
+      });
       player.on('progress', function(_ev, _api, time) {
         lastProgress = time;
         if (timeout) return;
         timeout = setTimeout(function() {
-          track(player.video.src, lastProgress, flowplayer.version, null, function(err) {
-            if (err) {
-              clearTimeout(timeout);
-              timeout = 'error';
-            }
-          });
+          track(player.video.src, lastProgress, flowplayer.version, null, _cbHandler);
           clearTimeout(timeout);
           timeout = null;
         }, 5000);
