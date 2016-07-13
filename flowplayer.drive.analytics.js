@@ -3,7 +3,7 @@
 
   function track(src, time, playerVersion, p2p, cb) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://flowplayer.org/events');
+    xhr.open('POST', 'https://api.flowplayer.org/events/play');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE && xhr.status !== 200) cb(new Error('Request error'));
