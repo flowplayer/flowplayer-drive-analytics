@@ -1,3 +1,13 @@
+/*!
+
+   Drive analytics plugin for Flowplayer HTML5
+
+   Copyright (c) 2016, Flowplayer Oy
+
+   Released under the ISC License:
+   https://opensource.org/licenses/ISC
+
+*/
 (function() {
   /* global flowplayer */
 
