@@ -18,26 +18,25 @@
 
   var extension = function(flowplayer) {
     flowplayer(function(player) {
-      var lastProgress, timeout;
+      var nextProgess;
 
       function _cbHandler(err) {
         if (err) {
-          clearTimeout(timeout);
-          timeout = 'error';
+          player.off('.drivetrack'); // Don't bombard the API if it's down
         }
       }
 
       player.on('ready', function(_ev, _api, video) {
         player.one('resume', function() {
           track(video.src, 0, flowplayer.version, false, _cbHandler);
-          player.on('progress', function(_ev, _api, time) {
-            lastProgress = time;
-            if (timeout) return;
-            timeout = setTimeout(function() {
-              track(player.video.src, lastProgress, flowplayer.version, null, _cbHandler);
-              clearTimeout(timeout);
-              timeout = null;
-            }, 5000);
+          nextProgess = 5;
+          player.on('progress.drivetrack', function(_ev, _api, time) {
+            if (time < nextProgess) return;
+            track(player.video.src, nextProgess, flowplayer.version, null, _cbHandler);
+            nextProgess += 5;
+          });
+          player.on('finish.drivetrack', function() {
+            track(player.video.src, player.video.duration, flowplayer.version, null, _cbHandler);
           });
         });
       });
