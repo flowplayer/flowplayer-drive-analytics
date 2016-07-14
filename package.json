@@ -5,7 +5,7 @@
   "main": "flowplayer.drive.analytics.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "min": "uglifyjs --compress --mangle --comments '/Flowplayer Oy/' -o flowplayer.drive.analytics.min.js -- flowplayer.drive.analytics.js"
+    "min": "uglifyjs --compress --mangle --comments '/Flowplayer Oy/' -o flowplayer.drive-analytics.min.js -- flowplayer.drive-analytics.js"
   },
   "author": "Flowplayer",
   "license": "ISC",
