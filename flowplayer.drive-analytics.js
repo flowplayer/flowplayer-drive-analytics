@@ -11,7 +11,7 @@
 (function() {
   /* global flowplayer */
 
-  function track(src, time, playerVersion, p2p, cb) {
+  function track(src, time, playerVersion, p2p, finished, cb) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://api.flowplayer.org/events/play');
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -22,7 +22,8 @@
       src: src,
       seconds: time,
       p2p: p2p,
-      playerVersion: playerVersion
+      playerVersion: playerVersion,
+      finished: !!finished
     }}));
   }
 
@@ -38,15 +39,15 @@
 
       player.on('ready', function(_ev, _api, video) {
         player.one('resume', function() {
-          track(video.src, 0, flowplayer.version, false, _cbHandler);
+          track(video.src, 0, flowplayer.version, false, false, _cbHandler);
           nextProgess = 5;
           player.on('progress.drivetrack', function(_ev, _api, time) {
             if (time < nextProgess) return;
-            track(player.video.src, nextProgess, flowplayer.version, null, _cbHandler);
+            track(player.video.src, nextProgess, flowplayer.version, null, false, _cbHandler);
             nextProgess += 5;
           });
           player.on('finish.drivetrack', function() {
-            track(player.video.src, player.video.duration, flowplayer.version, null, _cbHandler);
+            track(player.video.src, player.video.duration, flowplayer.version, null, true, _cbHandler);
           });
         });
       });
