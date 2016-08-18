@@ -12,6 +12,8 @@
   /* global flowplayer */
 
   function track(src, time, playerVersion, p2p, finished, cb) {
+    if (!isDriveURL(src)) return;
+
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://api.flowplayer.org/events/play');
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -56,4 +58,10 @@
 
   if (typeof module === 'object' && module.exports) module.exports = extension;
   else if (typeof flowplayer === 'function') extension(flowplayer);
+
+  function isDriveURL(src) {
+    var a = document.createElement('a');
+    a.href = src;
+    return ['cdn.flowplayer.org', 'drive.flowplayer.org', 'cdn.dev.flowplayer.org'].indexOf(a.hostname) !== -1;
+  }
 })();
