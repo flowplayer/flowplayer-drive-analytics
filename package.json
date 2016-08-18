@@ -2,7 +2,7 @@
   "name": "flowplayer-drive-analytics",
   "version": "1.0.0",
   "description": "Plugin to send flowplayer drive usage to UI",
-  "main": "flowplayer.drive.analytics.js",
+  "main": "flowplayer.drive-analytics.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "min": "uglifyjs --compress --mangle --comments '/Flowplayer Oy/' -o flowplayer.drive-analytics.min.js -- flowplayer.drive-analytics.js"
