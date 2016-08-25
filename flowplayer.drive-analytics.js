@@ -41,7 +41,7 @@
       }
 
       player.on('ready', function(_ev, _api, video) {
-        player.one('resume', function() {
+        player.one(player.conf.splash ? 'progress' : 'resume', function() {
           track(video.src, 0, flowplayer.version, false, false, _cbHandler);
           nextProgess = 5;
           player.on('progress.drivetrack', function(_ev, _api, time) {
