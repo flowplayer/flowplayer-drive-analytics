@@ -51,6 +51,13 @@
           });
           player.on('finish.drivetrack', function() {
             track(player.video.src, player.video.duration, flowplayer.version, null, true, _cbHandler);
+            player.one('resume', function() {
+              track(video.src, 0, flowplayer.version, false, false, _cbHandler);
+              nextProgess = 5;
+            });
+          });
+          player.on('seek', function(_, __, time) {
+            nextProgess = Math.ceil(time/5)*5;
           });
         });
       });
