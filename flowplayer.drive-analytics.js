@@ -12,6 +12,7 @@
   /* global flowplayer */
 
   function track(src, time, playerVersion, p2p, finished, cb) {
+    if (typeof time !== 'number') return;
     var trackerUrl = getTrackerURL(src);
     if (!trackerUrl) return;
 
