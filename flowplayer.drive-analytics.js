@@ -42,6 +42,10 @@
       }
 
       player.on('ready', function(_ev, _api, video) {
+        console.log('attaching handler');
+        xflow.Broker.on(xflow.Events.STATS, function(stats) {
+          console.log('stats', stats);
+        });
         player.one(player.conf.splash ? 'progress' : 'resume', function() {
           track(video.src, 0, flowplayer.version, false, false, _cbHandler);
           nextProgess = 5;
