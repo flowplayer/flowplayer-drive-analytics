@@ -47,7 +47,7 @@
           });
         });
         function track(src, time, playerVersion, finished, cb) {
-          if (typeof time !== 'number') return;
+          if (typeof time !== 'number' || !isFinite(time)) return;
           var trackerUrl = getTrackerURL(src);
           if (!trackerUrl) return;
 
