@@ -13,7 +13,7 @@
 
   var extension = function(flowplayer) {
     flowplayer(function(player) {
-      var nextProgess;
+      var nextProgess, p2pBytes = {};
 
       function _cbHandler(err) {
         if (err) {
@@ -21,12 +21,14 @@
         }
       }
 
+      if (typeof xflow !== 'undefined') xflow.Broker.on(xflow.Events.STATS, function(stats) {
+        if (!stats.p2p) return;
+        var url = resolveUrl(stats.src);
+        if (!p2pBytes[url]) p2pBytes[url] = 0;
+        p2pBytes[url] += stats.loaded;
+      });
+
       player.on('ready', function(_ev, _api, video) {
-        var p2pTick = 0;
-        if (typeof xflow !== 'undefined') xflow.Broker.on(xflow.Events.STATS, function(stats) {
-          if (!stats.p2p) return;
-          p2pTick += stats.loaded;
-        });
         player.one(player.conf.splash ? 'progress' : 'resume', function() {
           track(video.src, 0, flowplayer.version, false, _cbHandler);
           nextProgess = 5;
@@ -57,14 +59,15 @@
           xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status !== 200) cb(new Error('Request error'));
           };
+          var url = resolveUrl(src);
           xhr.send(JSON.stringify({ play: {
             src: src,
             seconds: time,
-            p2pBytes: p2pTick,
+            p2pBytes: p2pBytes[url],
             playerVersion: playerVersion,
             finished: !!finished
           }}));
-          p2pTick = 0;
+          p2pBytes[url] = 0;
         }
       });
     });
@@ -72,6 +75,12 @@
 
   if (typeof module === 'object' && module.exports) module.exports = extension;
   else if (typeof flowplayer === 'function') extension(flowplayer);
+
+  function resolveUrl(src) {
+    var a = document.createElement('a');
+    a.href = src;
+    return a.href;
+  }
 
   function getTrackerURL(src) {
     var a = document.createElement('a');
