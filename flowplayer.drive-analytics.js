@@ -13,7 +13,7 @@
 
   var extension = function(flowplayer) {
     flowplayer(function(player) {
-      var nextProgess, p2pBytes = {};
+      var nextProgess, p2pBytes = {}, cdnBytes = {};
 
       function _cbHandler(err) {
         if (err) {
@@ -22,8 +22,12 @@
       }
 
       if (typeof xflow !== 'undefined') xflow.Broker.on(xflow.Events.STATS, function(stats) {
-        if (!stats.p2p) return;
         var url = resolveUrl(stats.src);
+        if (!stats.p2p) {
+          if (!cdnBytes[url]) cdnBytes[url] = 0;
+          cdnBytes[url] += stats.loaded;
+          return;
+        }
         if (!p2pBytes[url]) p2pBytes[url] = 0;
         p2pBytes[url] += stats.loaded;
       });
@@ -64,9 +68,11 @@
             src: src,
             seconds: time,
             p2pBytes: p2pBytes[url],
+            cdnBytes: cdnBytes[url],
             playerVersion: playerVersion,
             finished: !!finished
           }}));
+          cdnBytes[url] = 0;
           p2pBytes[url] = 0;
         }
       });
