@@ -13,7 +13,7 @@
 
   var extension = function(flowplayer) {
     flowplayer(function(player) {
-      var nextProgess, p2pBytes = {}, cdnBytes = {};
+      var nextProgress, p2pBytes = {}, cdnBytes = {};
 
       function _cbHandler(err) {
         if (err) {
@@ -35,21 +35,21 @@
       player.on('ready', function(_ev, _api, video) {
         player.one(player.conf.splash ? 'progress' : 'resume', function() {
           track(video.src, 0, flowplayer.version, false, _cbHandler);
-          nextProgess = 5;
+          nextProgress = 5;
           player.on('progress.drivetrack', function(_ev, _api, time) {
-            if (time < nextProgess) return;
-            track(player.video.src, nextProgess, flowplayer.version, false, _cbHandler);
-            nextProgess += 5;
+            if (time < nextProgress) return;
+            track(player.video.src, nextProgress, flowplayer.version, false, _cbHandler);
+            nextProgress += 5;
           });
           player.on('finish.drivetrack', function() {
             track(player.video.src, player.video.duration, flowplayer.version, true, _cbHandler);
             player.one('resume', function() {
               track(video.src, 0, flowplayer.version, false, _cbHandler);
-              nextProgess = 5;
+              nextProgress = 5;
             });
           });
           player.on('seek', function(_, __, time) {
-            nextProgess = Math.ceil(time/5)*5;
+            nextProgress = Math.ceil(time/5)*5;
           });
         });
         function track(src, time, playerVersion, finished, cb) {
